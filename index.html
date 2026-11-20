@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Snoopy wants to deliver a gift!</title>
+  <meta name="description" content="A little birthday surprise, delivered by Snoopy.">
+  <!-- Link preview in DMs. After deploying, make og:image an absolute URL. -->
+  <meta property="og:title" content="Snoopy - Birthday Gift">
+  <meta property="og:description" content="Snoopy wants to deliver a gift!">
+  <meta property="og:image" content="assets/og.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#a9bde3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Patrick+Hand+SC&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- 1. Landing -->
+    <section class="screen screen--checker" id="landing" aria-label="Snoopy has a gift">
+      <div class="stage">
+        <img class="hero-img" src="assets/snoopy-gift.webp" alt="Snoopy in a party hat sitting with a wrapped gift and Woodstock">
+        <div class="landing-slot">
+          <p class="hand caption" data-text="landing.caption"></p>
+          <div class="choices">
+            <button class="pill" data-go="birthday" data-text="landing.accept"></button>
+            <button class="pill" data-go="decline" data-text="landing.decline"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Decline -->
+    <section class="screen screen--checker" id="decline" aria-label="Are you sure?">
+      <div class="stage">
+        <img class="hero-img hero-img--cry" src="assets/snoopy-cry.webp" alt="Snoopy crying">
+        <p class="hand caption is-in" data-text="decline.title"></p>
+        <button class="pill is-in" data-go="landing" data-text="decline.back"></button>
+      </div>
+    </section>
+
+    <!-- 3. Happy birthday -->
+    <section class="screen screen--confetti" id="birthday" aria-label="Happy birthday">
+      <div class="confetti" aria-hidden="true"></div>
+      <div class="stage">
+        <h1 class="hand title-hand" id="birthday-title"></h1>
+        <img class="hero-img hero-img--party" src="assets/snoopy-party.webp" alt="Snoopy and Woodstock in party hats">
+        <button class="pill pill--small" data-go="hub" data-text="birthday.button"></button>
+      </div>
+    </section>
+
+    <!-- 4. Gifts hub -->
+    <section class="screen screen--dots" id="hub" aria-label="Gifts for you">
+      <div class="stage">
+        <h2 class="chewy hub-title" data-text="hub.title"></h2>
+        <p class="sub" data-text="hub.subtitle"></p>
+        <div class="tiles" id="tiles"></div>
+      </div>
+    </section>
+
+    <!-- 5. One gift (content swapped in by app.js) -->
+    <section class="screen screen--peri" id="gift" aria-label="Your gift">
+      <div class="gift-wrap">
+        <div class="card" id="gift-card"></div>
+        <button class="back-bar chewy" data-go="hub" data-text="back"></button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
