@@ -28,3 +28,18 @@ there. Make the repo private on GitHub if that matters; Vercel keeps deploying.
 `python -m http.server 5190`, then http://localhost:5190/?for=<their-link>.
 
 Snoopy art: Peanuts characters, collected from public image results. Fine for a personal gift, not for resale.
+
+## Online Gift Studio (any device)
+https://claude.ai/artifact/8CZXfAdFxoBU9wdqTohjT4 (private claude.ai page, `studio/online.html`).
+Fill in the gift there, click **Ready for link**, then ask Claude "make the link for <name>".
+
+What Claude does for each gift marked ready (status `ready` in the artifact db, collection `gifts`):
+1. `ArtifactData` query `gifts` where `status == "ready"`, saved with `out_dir`.
+2. Download every `asset:<id>` in the gift (photos, `bouquet`) with the Artifact tool's
+   `read` + `path: <id>` (one asset per call) into one folder.
+3. `node studio/import-online.js <doc.json> <that folder>` writes `gifts/<link>/`.
+4. Commit, push, wait for Vercel, open the link to check it.
+5. `ArtifactData` update the doc: `status: "live"`, `liveUrl` (the page then shows the link).
+
+To republish the online studio after changing its files, publish `studio/online.html` with the
+same `files` map (studio.css, templates.js, online.js, preview.html, app.js, style.css, assets/).

@@ -1,0 +1,99 @@
+<title>Snoopy Gift Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="studio.css">
+
+<header class="top">
+  <div class="brand">
+    <img src="assets/snoopy-gift.webp" alt="">
+    <div>
+      <h1>Gift Studio</h1>
+      <p>Fill in a Snoopy birthday gift, mark it ready, and Claude turns it into a link you can send.</p>
+    </div>
+  </div>
+  <button class="btn btn--ghost" id="new-gift" type="button">+ New gift</button>
+</header>
+
+<p class="notice" id="notice" hidden></p>
+
+<section class="steps" aria-label="How it works">
+  <div><b>1</b><span>Fill in the gift and add photos</span></div>
+  <div><b>2</b><span>Click <em>Ready for link</em></span></div>
+  <div><b>3</b><span>Tell Claude “make the link for &lt;name&gt;”</span></div>
+</section>
+
+<section class="saved" aria-label="Your gifts">
+  <h2>Your gifts</h2>
+  <div class="saved-list" id="saved-list"><p class="muted">Loading your gifts…</p></div>
+</section>
+
+<section class="linkcard" id="linkcard" hidden>
+  <div>
+    <strong id="linkcard-title">Ready to send</strong>
+    <p id="linkcard-text"></p>
+  </div>
+  <div class="linkbox"><input id="linkcard-url" readonly aria-label="Gift link"><button class="btn" id="linkcard-copy" type="button">Copy</button></div>
+  <div class="done-actions">
+    <a class="btn btn--ghost" id="linkcard-open" target="_blank" rel="noopener">Open it</a>
+    <a class="btn btn--ghost" id="linkcard-wa" target="_blank" rel="noopener">Send on WhatsApp</a>
+  </div>
+</section>
+
+<div class="layout">
+  <form class="editor" id="editor" autocomplete="off" novalidate></form>
+
+  <aside class="preview">
+    <div class="preview-head">
+      <strong>Preview</strong>
+      <div class="jumps" id="jumps">
+        <button type="button" data-jump="" class="is-on">Start</button>
+        <button type="button" data-jump="hub">Gifts</button>
+        <button type="button" data-jump="gift-0">Cake</button>
+        <button type="button" data-jump="gift-1">Flowers</button>
+        <button type="button" data-jump="gift-2">Song</button>
+        <button type="button" data-jump="gift-3">Photos</button>
+        <button type="button" data-jump="gift-4">Letter</button>
+      </div>
+      <p class="hint" id="song-note" hidden>The song player only shows on the real link.</p>
+    </div>
+    <div class="phone">
+      <iframe id="preview" title="Gift preview"></iframe>
+    </div>
+  </aside>
+</div>
+
+<footer class="bar">
+  <p class="bar-status" id="bar-status">New gift · not saved</p>
+  <div class="bar-actions">
+    <button class="btn btn--ghost" id="save" type="button">Save</button>
+    <button class="btn" id="ready" type="button">Ready for link</button>
+  </div>
+</footer>
+
+<dialog id="ask">
+  <div class="done">
+    <h2 id="ask-title">Are you sure?</h2>
+    <p id="ask-text"></p>
+    <div class="done-actions">
+      <button class="btn" id="ask-yes" type="button">Yes</button>
+      <button class="btn btn--ghost" id="ask-no" type="button">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="readydlg">
+  <div class="done">
+    <img src="assets/snoopy-party.webp" alt="">
+    <h2>Marked ready!</h2>
+    <p>Now send Claude this message in your chat, and it will make the link:</p>
+    <div class="linkbox"><input id="ready-msg" readonly aria-label="Message for Claude"><button class="btn" id="ready-copy" type="button">Copy</button></div>
+    <p class="small">When the link is live it shows up at the top of this page too.</p>
+    <div class="done-actions"><button class="btn btn--ghost" id="ready-close" type="button">Close</button></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="templates.js"></script>
+<script src="online.js"></script>
