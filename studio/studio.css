@@ -126,6 +126,21 @@ input:disabled { color: var(--muted); background: var(--bg); }
 }
 .photo.is-sample span { inset: 50% 8px auto 8px; transform: translateY(-50%); background: none; font-size: 14px; }
 
+.bouquet-pick { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.bouquet-ring {
+  width: 110px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; flex: none;
+  border: 3px solid #2a2f45; background: #fff; padding: 8px; display: grid; place-items: center;
+}
+.bouquet-ring img { width: 100%; height: 100%; object-fit: contain; }
+.bouquet-ring.is-fill { padding: 0; }
+.bouquet-ring.is-fill img { object-fit: cover; }
+.bouquet-btns { display: grid; gap: 8px; justify-items: start; }
+.linkish {
+  border: 0; background: none; padding: 0; cursor: pointer; font-size: 13px;
+  color: var(--muted); text-decoration: underline; text-underline-offset: 3px;
+}
+.linkish:hover { color: var(--accent); }
+
 /* preview */
 .preview { position: sticky; top: 16px; }
 .preview-head { display: grid; gap: 8px; margin-bottom: 10px; }

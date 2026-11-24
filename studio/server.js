@@ -79,9 +79,26 @@ function saveGift(slug, gift) {
   const dir = path.join(GIFTS, slug);
   fs.mkdirSync(dir, { recursive: true });
   const photoGift = (gift.gifts || []).find((g) => g.type === "photos");
+  const flowerGift = (gift.gifts || []).find((g) => g.type === "flowers");
   const keep = new Set();
+  const stamp = Date.now();
+  // the flowers gift can have its own picture instead of Snoopy's red bouquet
+  if (flowerGift && flowerGift.bouquet) {
+    const m = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(flowerGift.bouquet);
+    if (m) {
+      const name = `bouquet-${stamp}.${m[1] === "jpeg" ? "jpg" : m[1]}`;
+      fs.writeFileSync(path.join(dir, name), Buffer.from(m[2], "base64"));
+      keep.add(name);
+      flowerGift.bouquet = `gifts/${slug}/${name}`;
+    } else if (String(flowerGift.bouquet).startsWith(`gifts/${slug}/`)) {
+      keep.add(flowerGift.bouquet.split("/").pop());
+    } else {
+      delete flowerGift.bouquet; delete flowerGift.bouquetFit;
+    }
+  } else if (flowerGift) {
+    delete flowerGift.bouquet; delete flowerGift.bouquetFit;
+  }
   if (photoGift) {
-    const stamp = Date.now();
     photoGift.photos = (photoGift.photos || []).map((p, i) => {
       const m = /^data:image\/(jpeg|png|webp);base64,(.+)$/.exec(p || "");
       if (m) {
@@ -96,9 +113,9 @@ function saveGift(slug, gift) {
       return `assets/photo-${i + 1}.jpg`;
     });
   }
-  // remove photos this gift no longer uses
+  // remove pictures this gift no longer uses
   for (const f of fs.readdirSync(dir)) {
-    if (/^photo-.*\.(jpg|png|webp)$/.test(f) && !keep.has(f)) fs.unlinkSync(path.join(dir, f));
+    if (/^(photo|bouquet)-.*\.(jpg|png|webp)$/.test(f) && !keep.has(f)) fs.unlinkSync(path.join(dir, f));
   }
   const body = `/* Made in Gift Studio. Opens at ${LIVE}/${slug} */\nwindow.GIFT = ${JSON.stringify(gift, null, 2)};\n`;
   fs.writeFileSync(path.join(dir, "gift.js"), body);

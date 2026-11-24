@@ -156,7 +156,9 @@
         <p class="gift-sub">${esc(g.subtitle)}</p>
         <div class="bouquet">
           <div class="notes notes--l">${L.map((t, i) => chip(t, i * 2)).join("")}</div>
-          <div class="ring"><img src="assets/snoopy-bouquet.webp" alt="Snoopy holding a bouquet of red flowers"></div>
+          <div class="ring${g.bouquet && g.bouquetFit === "cover" ? " ring--fill" : ""}">${g.bouquet
+            ? `<img src="${esc(g.bouquet)}" alt="Flowers">`
+            : `<img src="assets/snoopy-bouquet.webp" alt="Snoopy holding a bouquet of red flowers">`}</div>
           <div class="notes notes--r">${R.map((t, i) => chip(t, i * 2 + 1)).join("")}</div>
         </div>`;
     },

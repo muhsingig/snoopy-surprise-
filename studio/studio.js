@@ -21,6 +21,7 @@
     { title: "Gift 2 · Flowers", jump: "gift-1", fields: [
       { label: "Title", path: "gifts.1.title", kind: "text" },
       { label: "Subtitle", path: "gifts.1.subtitle", kind: "text" },
+      { kind: "bouquet" },
       { label: "Little things you love about them", path: "gifts.1.notes", kind: "lines", rows: 10, hint: "One per line, up to 10. Short ones look best." },
     ]},
     { title: "Gift 3 · Song", jump: "gift-2", fields: [
@@ -131,6 +132,36 @@
       return wrap;
     }
 
+    if (f.kind === "bouquet") {
+      const fg = gift.gifts[1];
+      const src = fg.bouquet ? (fg.bouquet.startsWith("data:") ? fg.bouquet : "/" + fg.bouquet) : "/assets/snoopy-bouquet.webp";
+      wrap.innerHTML = `<span class="label">Flower picture</span>
+        <div class="bouquet-pick">
+          <div class="bouquet-ring${fg.bouquet && fg.bouquetFit === "cover" ? " is-fill" : ""}"><img src="${src}" alt=""></div>
+          <div class="bouquet-btns">
+            <button type="button" class="btn btn--ghost" data-act="upload">${fg.bouquet ? "Change picture" : "Use their favourite flowers"}</button>
+            ${fg.bouquet ? `<button type="button" class="linkish" data-act="reset">Go back to Snoopy's red flowers</button>` : ""}
+          </div>
+        </div>
+        <p class="hint">Lilies, sunflowers, anything. A cut-out picture (PNG with a see-through background) sits inside the circle like Snoopy does; a normal photo fills the circle.</p>`;
+      const file = document.createElement("input");
+      file.type = "file"; file.accept = "image/*"; file.hidden = true;
+      wrap.appendChild(file);
+      file.addEventListener("change", async () => {
+        if (!file.files[0]) return;
+        try {
+          const { url, transparent } = await shrinkBouquet(file.files[0]);
+          fg.bouquet = url; fg.bouquetFit = transparent ? "contain" : "cover";
+          markDirty(); render();
+        } catch { alert("That picture couldn't be opened. Try a JPG or PNG."); }
+      });
+      $('[data-act="upload"]', wrap).addEventListener("click", () => file.click());
+      $('[data-act="reset"]', wrap)?.addEventListener("click", () => {
+        delete fg.bouquet; delete fg.bouquetFit; markDirty(); render();
+      });
+      return wrap;
+    }
+
     const id = "f-" + f.path.replace(/\./g, "-");
     const value = get(gift, f.path);
     let shown = value;
@@ -197,13 +228,42 @@
     });
   }
 
+  // flower picture: keep a see-through background if it has one
+  function shrinkBouquet(file, max = 800) {
+    return new Promise((resolve, reject) => {
+      const u = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const s = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+        const x = c.getContext("2d");
+        x.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(u);
+        const px = x.getImageData(0, 0, c.width, c.height).data;
+        let clear = 0;
+        for (let i = 3; i < px.length; i += 16) if (px[i] < 200) clear++;
+        const transparent = clear > px.length / 16 * 0.02;   // >2% see-through
+        let url;
+        if (transparent) {
+          url = c.toDataURL("image/webp", 0.9);
+          if (!url.startsWith("data:image/webp")) url = c.toDataURL("image/png");
+        } else url = c.toDataURL("image/jpeg", 0.88);
+        resolve({ url, transparent });
+      };
+      img.onerror = () => { URL.revokeObjectURL(u); reject(new Error("bad image")); };
+      img.src = u;
+    });
+  }
+
   /* ---------- tone switch ---------- */
   function switchTone(key) {
     if (key === tone) return;
-    if (dirty && !confirm(`Swap the wording for the ${TEMPLATES[key].label.toLowerCase()} version? Their name, link, photos and song stay; the rest of the text is replaced.`)) return;
-    const keep = { name: gift.name, yt: gift.gifts[2].youtubeId, label: gift.gifts[2].songLabel };
+    if (dirty && !confirm(`Swap the wording for the ${TEMPLATES[key].label.toLowerCase()} version? Their name, link, photos, flower picture and song stay; the rest of the text is replaced.`)) return;
+    const keep = { name: gift.name, yt: gift.gifts[2].youtubeId, label: gift.gifts[2].songLabel, b: gift.gifts[1].bouquet, bf: gift.gifts[1].bouquetFit };
     gift = TEMPLATES[key].build();
     gift.name = keep.name; gift.gifts[2].youtubeId = keep.yt; gift.gifts[2].songLabel = keep.label;
+    if (keep.b) { gift.gifts[1].bouquet = keep.b; gift.gifts[1].bouquetFit = keep.bf; }
     tone = key; gift._tone = key;
     markDirty(); render();
   }

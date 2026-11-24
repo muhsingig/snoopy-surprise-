@@ -242,6 +242,9 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   display: grid; place-items: center; overflow: hidden; padding: 14px;
 }
 .ring img { height: 100%; object-fit: contain; }
+/* a full photo (no transparent background) fills the whole circle */
+.ring--fill { padding: 0; }
+.ring--fill img { width: 100%; height: 100%; object-fit: cover; }
 
 /* -- song -- */
 .player { position: relative; width: min(100%, 560px); margin: 18px auto 8px; }
