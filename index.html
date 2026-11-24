@@ -75,7 +75,18 @@
 
   </main>
 
-  <script src="data.js"></script>
+  <!-- Each friend's gift lives in gifts/<link-name>/gift.js and opens at
+       /<link-name> (or ?for=<link-name>). With no name, data.js is the sample. -->
+  <script>
+    (function () {
+      var ok = /^[a-z0-9-]{1,48}$/;
+      var q = (new URLSearchParams(location.search).get("for") || "").toLowerCase();
+      var p = location.pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
+      var slug = ok.test(q) ? q : ok.test(p) ? p : "";
+      if (slug) document.write('<script src="gifts/' + slug + '/gift.js"><\/script>');
+    })();
+  </script>
+  <script>if (!window.GIFT) document.write('<script src="data.js"><\/script>');</script>
   <script src="app.js"></script>
 </body>
 </html>

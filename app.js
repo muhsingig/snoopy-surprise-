@@ -1,5 +1,12 @@
 (() => {
   const G = window.GIFT;
+  // "{name}" can be used in any text and becomes the friend's name
+  (function fillName(o) {
+    for (const k in o) {
+      if (typeof o[k] === "string") o[k] = o[k].replace(/\{name\}/g, G.name);
+      else if (o[k] && typeof o[k] === "object") fillName(o[k]);
+    }
+  })(G);
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const FADE = 380;
@@ -256,5 +263,9 @@
   }
   function stopMic() { if (mic) { mic.stop(); mic = null; } }
 
-  show("landing");
+  // #hub, #birthday or #gift-0 … #gift-4 open straight to that screen (used by Gift Studio's preview)
+  const jump = /^#(hub|birthday|gift-(\d))$/.exec(location.hash);
+  if (jump && jump[2] != null && G.gifts[+jump[2]]) show("gift", +jump[2]);
+  else if (jump && !jump[2]) show(jump[1]);
+  else show("landing");
 })();

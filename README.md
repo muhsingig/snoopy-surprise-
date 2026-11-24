@@ -5,17 +5,26 @@ An interactive birthday gift site modelled on the "Snoopy - Birthday Template" C
 Flow: landing (Accept / Decline) → Happy birthday → Gifts hub → 5 gifts
 (blow the candles, flowers, song, photos, letter).
 
-## Personalise it
-- **All text, the song and photo paths:** `data.js`
-- **Photos:** replace `assets/photo-1.jpg` … `photo-3.jpg` (square crops look best)
-- **Song:** put the YouTube video id in `data.js` → `youtubeId`
+## Make one for a friend (Gift Studio)
+1. Double-click **Make a Gift.bat**. Gift Studio opens at http://localhost:5191/studio/
+   (keep the black window open while you work).
+2. Pick **Bestie** or **Partner** for the starting wording, type their name, then change
+   any line you like: flower notes, song (paste a YouTube link), 3 photos, the letter.
+3. **Save & preview** shows it in the phone on the right. The buttons above the phone
+   jump straight to each gift.
+4. **Publish & get link** pushes it to GitHub; Vercel puts it live in about a minute at
+   `https://snoopy-surprise.vercel.app/<their-link>`. Copy it or send it on WhatsApp.
 
-## Preview
-Open the folder with any static server, e.g. `python -m http.server 5190`, then go to http://localhost:5190.
+Every gift you made is listed at the top of the studio, so you can open one again,
+edit it and publish again (same link).
 
-## Share it
-Deploy the folder as a static site (Vercel, Netlify, GitHub Pages). Then change
-`og:image` in `index.html` to the full URL (e.g. `https://your-site.vercel.app/assets/og.jpg`)
-so the DM link preview shows the Snoopy card.
+Each gift lives in `gifts/<their-link>/` (`gift.js` + photos). `/?for=<their-link>`
+also works. The plain URL with no link name shows the sample in `data.js`.
+
+Note: the GitHub repo is public, so anything in `gifts/` (photos included) can be seen
+there. Make the repo private on GitHub if that matters; Vercel keeps deploying.
+
+## Preview without the studio
+`python -m http.server 5190`, then http://localhost:5190/?for=<their-link>.
 
 Snoopy art: Peanuts characters, collected from public image results. Fine for a personal gift, not for resale.

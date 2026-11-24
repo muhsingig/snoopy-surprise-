@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gift Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="studio.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="../assets/snoopy-gift.webp" alt="">
+      <div>
+        <h1>Gift Studio</h1>
+        <p>Make a Snoopy birthday gift for someone, then send them the link.</p>
+      </div>
+    </div>
+    <button class="btn btn--ghost" id="new-gift">+ New gift</button>
+  </header>
+
+  <section class="saved" aria-label="Your gifts">
+    <h2>Your gifts</h2>
+    <div class="saved-list" id="saved-list"><p class="muted">Nothing saved yet. Fill in the form below to make your first one.</p></div>
+  </section>
+
+  <div class="layout">
+    <form class="editor" id="editor" autocomplete="off" novalidate></form>
+
+    <aside class="preview">
+      <div class="preview-head">
+        <strong>Preview</strong>
+        <div class="jumps" id="jumps">
+          <button type="button" data-jump="">Start</button>
+          <button type="button" data-jump="hub">Gifts</button>
+          <button type="button" data-jump="gift-0">Cake</button>
+          <button type="button" data-jump="gift-1">Flowers</button>
+          <button type="button" data-jump="gift-2">Song</button>
+          <button type="button" data-jump="gift-3">Photos</button>
+          <button type="button" data-jump="gift-4">Letter</button>
+        </div>
+      </div>
+      <div class="phone">
+        <iframe id="preview" title="Gift preview"></iframe>
+        <div class="phone-empty" id="preview-empty">
+          <p>Type their name and hit <b>Save</b> to see the preview here.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="bar">
+    <p class="bar-status" id="bar-status">New gift · not saved</p>
+    <div class="bar-actions">
+      <button class="btn btn--ghost" id="save">Save &amp; preview</button>
+      <button class="btn" id="publish">Publish &amp; get link</button>
+    </div>
+  </footer>
+
+  <dialog id="done">
+    <div class="done">
+      <img src="../assets/snoopy-party.webp" alt="">
+      <h2 id="done-title">It's on its way!</h2>
+      <p id="done-text">Give it about a minute to go live, then send this link:</p>
+      <div class="linkbox"><input id="done-link" readonly><button class="btn" id="copy-link" type="button">Copy</button></div>
+      <div class="done-actions">
+        <a class="btn btn--ghost" id="open-link" target="_blank" rel="noopener">Open it</a>
+        <a class="btn btn--ghost" id="wa-link" target="_blank" rel="noopener">Send on WhatsApp</a>
+        <button class="btn btn--ghost" type="button" id="close-done">Close</button>
+      </div>
+      <pre class="log" id="done-log" hidden></pre>
+    </div>
+  </dialog>
+
+  <script src="templates.js"></script>
+  <script src="studio.js"></script>
+</body>
+</html>
